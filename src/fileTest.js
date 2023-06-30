@@ -4,8 +4,13 @@ import fs from "fs";
 export default filePath => {
 
   if(/\.vue$/.test(filePath)) {
-    const { script } = compiler.parseComponent(fs.readFileSync(filePath, {encoding: "utf8"}));
-    return !!script.lang && script.lang.toLowerCase() === "ts";
+    const { script, setupScript } = compiler.parseComponent(fs.readFileSync(filePath, {encoding: "utf8"}));
+
+    let s = script
+    if (setupScript && !script) {
+      s = setupScript
+    }
+    return s && !!s.lang && s.lang.toLowerCase() === "ts";
   }
 
   return false;
